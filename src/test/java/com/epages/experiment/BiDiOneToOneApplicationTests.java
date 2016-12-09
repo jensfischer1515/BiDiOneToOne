@@ -16,16 +16,23 @@ public class BiDiOneToOneApplicationTests {
     @Autowired
     private ProductRepository productRepository;
 
+    private Product product;
+    private Availability availability;
+    private Long productId;
+
     @Test
     @Transactional
     public void should_persist() {
-        Product product = Product.builder()
-                .sku("123456")
-                .availability(Availability.builder().state("ON_STOCK").build())
-                .build();
+        product = Product.newInstance();
+        product.setSku("123456");
 
-        product = productRepository.save(product);
+        productId = productRepository.saveAndFlush(product).getId();
+        product = productRepository.findAll().iterator().next();
+        availability = product.getAvailability();
 
-        then(product.getId()).isEqualTo(product.getAvailability().getId());
+        then(product.getId()).isNotNull();
+        then(availability.getOwner()).isNotNull();
+        then(product.getId()).isEqualTo(availability.getProductId());
+        then(availability.getOwner()).isSameAs(product);
     }
 }
