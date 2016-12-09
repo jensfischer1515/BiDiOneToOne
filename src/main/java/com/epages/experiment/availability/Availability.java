@@ -45,7 +45,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Availability implements Persistable<UUID> {
 
     @Id
-    private UUID id;
+    UUID id;
 
     @MapsId
     @OneToOne
@@ -59,17 +59,17 @@ public class Availability implements Persistable<UUID> {
 
     @Version
     @Column(name = "OPT_LOCK", nullable = false)
-    private Long optLock;
+    Long optLock;
 
     @Basic
     @CreatedDate
     @Column(name = "CREATED_AT", nullable = false, insertable = true, updatable = false, columnDefinition = "DATETIME(3) NOT NULL")
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Basic
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_AT", nullable = false, insertable = true, updatable = true, columnDefinition = "DATETIME(3) NOT NULL")
-    private LocalDateTime lastModifiedAt;
+    LocalDateTime lastModifiedAt;
 
     @Override
     @Transient

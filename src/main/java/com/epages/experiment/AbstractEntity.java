@@ -21,38 +21,41 @@ import javax.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 import static com.epages.experiment.UUIDSequence.UUID_SEQUENCE;
 import static javax.persistence.AccessType.FIELD;
+import static lombok.AccessLevel.PRIVATE;
 
 @Access(FIELD)
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
 @ToString(of = "id")
 @NoArgsConstructor
+@FieldDefaults(level = PRIVATE)
 public abstract class AbstractEntity implements Persistable<UUID> {
 
     @Id
     @GeneratedValue(generator = UUID_SEQUENCE)
     @Column(name = "ID", columnDefinition = "BINARY(16) NOT NULL", unique = true)
-    private UUID id;
+    UUID id;
 
     @Version
     @Column(name = "OPT_LOCK", nullable = false)
     @Getter
-    private Long optLock;
+    Long optLock;
 
     @Basic
     @CreatedDate
     @Column(name = "CREATED_AT", nullable = false, insertable = true, updatable = false, columnDefinition = "DATETIME(3) NOT NULL")
     @Getter
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Basic
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_AT", nullable = false, insertable = true, updatable = true, columnDefinition = "DATETIME(3) NOT NULL")
     @Getter
-    private LocalDateTime lastModifiedAt;
+    LocalDateTime lastModifiedAt;
 
     protected AbstractEntity(UUID uuid) {
         this.id = uuid;

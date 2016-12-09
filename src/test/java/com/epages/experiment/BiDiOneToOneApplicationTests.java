@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
@@ -22,30 +20,33 @@ public class BiDiOneToOneApplicationTests {
     @Autowired
     private ProductRepository productRepository;
 
-    private Product product;
-    private UUID productId;
-
-    private Availability availability;
-    private UUID availabilityId;
-
     @Test
     @Transactional
     public void should_persist() {
-        product = new Product();
+        Product product = new Product();
         product.setSku("123456");
 
-        productId = productRepository.saveAndFlush(product).getId();
-        product = productRepository.findAll().iterator().next();
+        productRepository.save(product);
 
-        availability = product.getAvailability();
-        availabilityId = availability.getId();
-
-        availability.setState("OUT_OF_STOCK");
-        productRepository.saveAndFlush(product);
+        Availability availability = product.getAvailability();
 
         then(product.getId()).isNotNull();
+        then(product.getId()).isEqualTo(availability.getId());
         then(availability.getOwner()).isNotNull();
-        then(productId).isEqualTo(availabilityId);
         then(availability.getOwner()).isSameAs(product);
+    }
+
+    @Test
+    @Transactional
+    public void should_keep_product_optlock_when_changing_availability() {
+        Product product = new Product();
+        product.setSku("123456");
+
+        Long previousOptLock = productRepository.save(product).getOptLock();
+
+        product.getAvailability().setState("OUT_OF_STOCK");
+        productRepository.save(product);
+
+        then(previousOptLock).isEqualTo(product.getOptLock());
     }
 }
