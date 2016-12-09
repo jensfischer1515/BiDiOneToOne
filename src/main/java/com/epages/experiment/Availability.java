@@ -1,6 +1,7 @@
 package com.epages.experiment;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -30,11 +31,11 @@ import static lombok.AccessLevel.PRIVATE;
 public class Availability implements Serializable {
 
     @Id
-    Long productId;
+    UUID productId;
 
     @MapsId
     @OneToOne
-    @JoinColumn(name="PRODUCT_ID")
+    @JoinColumn(name = "PRODUCT_ID")
     Product owner;
 
     @Basic

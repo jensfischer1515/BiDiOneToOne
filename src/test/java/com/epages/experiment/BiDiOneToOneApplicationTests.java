@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
@@ -18,7 +20,7 @@ public class BiDiOneToOneApplicationTests {
 
     private Product product;
     private Availability availability;
-    private Long productId;
+    private UUID productId;
 
     @Test
     @Transactional
