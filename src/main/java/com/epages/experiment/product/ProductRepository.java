@@ -1,4 +1,4 @@
-package com.epages.experiment;
+package com.epages.experiment.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

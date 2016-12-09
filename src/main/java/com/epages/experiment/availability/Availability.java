@@ -1,4 +1,6 @@
-package com.epages.experiment;
+package com.epages.experiment.availability;
+
+import com.epages.experiment.product.Product;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,7 +31,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import static javax.persistence.AccessType.FIELD;
-import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PRIVATE;
 
 @Access(FIELD)
@@ -37,16 +38,13 @@ import static lombok.AccessLevel.PRIVATE;
 @Table(name = "AVAILABILITIES")
 @EntityListeners(value = {AuditingEntityListener.class})
 @Getter
-@Setter
 @Builder
-@FieldDefaults(level = PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = PRIVATE)
 public class Availability implements Persistable<UUID> {
 
     @Id
-    @Getter(onMethod = @__(@Transient))
-    @Setter(NONE)
     private UUID id;
 
     @MapsId
@@ -56,23 +54,21 @@ public class Availability implements Persistable<UUID> {
 
     @Basic
     @Column(name = "STATE", nullable = false)
+    @Setter
     String state;
 
     @Version
     @Column(name = "OPT_LOCK", nullable = false)
-    @Getter
     private Long optLock;
 
     @Basic
     @CreatedDate
     @Column(name = "CREATED_AT", nullable = false, insertable = true, updatable = false, columnDefinition = "DATETIME(3) NOT NULL")
-    @Getter
     private LocalDateTime createdAt;
 
     @Basic
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_AT", nullable = false, insertable = true, updatable = true, columnDefinition = "DATETIME(3) NOT NULL")
-    @Getter
     private LocalDateTime lastModifiedAt;
 
     @Override
@@ -87,6 +83,7 @@ public class Availability implements Persistable<UUID> {
 
     public static class AvailabilityBuilder {
         private String state = "ON_STOCK";
+
         AvailabilityBuilder(Product owner) {
             owner(owner);
         }

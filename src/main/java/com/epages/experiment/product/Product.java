@@ -1,4 +1,7 @@
-package com.epages.experiment;
+package com.epages.experiment.product;
+
+import com.epages.experiment.AbstractEntity;
+import com.epages.experiment.availability.Availability;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,9 +22,9 @@ import static lombok.AccessLevel.PRIVATE;
 @Table(name = "PRODUCTS")
 @Getter
 @Setter
-@FieldDefaults(level = PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = PRIVATE)
 public class Product extends AbstractEntity {
 
     @Basic(optional = false)
