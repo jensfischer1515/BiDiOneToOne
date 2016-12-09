@@ -25,7 +25,7 @@ public class BiDiOneToOneApplicationTests {
     @Test
     @Transactional
     public void should_persist() {
-        product = Product.newInstance();
+        product = new Product();
         product.setSku("123456");
 
         productId = productRepository.saveAndFlush(product).getId();
@@ -34,7 +34,7 @@ public class BiDiOneToOneApplicationTests {
 
         then(product.getId()).isNotNull();
         then(availability.getOwner()).isNotNull();
-        then(product.getId()).isEqualTo(availability.getProductId());
+        then(product.getId()).isEqualTo(availability.getId());
         then(availability.getOwner()).isSameAs(product);
     }
 }

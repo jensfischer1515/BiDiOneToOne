@@ -11,52 +11,31 @@ import java.util.UUID;
 import javax.persistence.Access;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import lombok.ToString;
 
+import static com.epages.experiment.UUIDSequence.UUID_SEQUENCE;
 import static javax.persistence.AccessType.FIELD;
-import static lombok.AccessLevel.NONE;
-import static lombok.AccessLevel.PRIVATE;
 
 @Access(FIELD)
-@Entity
-@Table(name = "AVAILABILITIES")
+@MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-@Getter
-@Setter
-@Builder
-@FieldDefaults(level = PRIVATE)
+@ToString(of = "id")
 @NoArgsConstructor
-@AllArgsConstructor
-public class Availability implements Persistable<UUID> {
+public abstract class AbstractEntity implements Persistable<UUID> {
 
     @Id
-    @Getter(onMethod = @__(@Transient))
-    @Setter(NONE)
+    @GeneratedValue(generator = UUID_SEQUENCE)
+    @Column(name = "ID", columnDefinition = "BINARY(16) NOT NULL", unique = true)
     private UUID id;
-
-    @MapsId
-    @OneToOne
-    @JoinColumn(name = "PRODUCT_ID")
-    Product owner;
-
-    @Basic
-    @Column(name = "STATE", nullable = false)
-    String state;
 
     @Version
     @Column(name = "OPT_LOCK", nullable = false)
@@ -75,20 +54,18 @@ public class Availability implements Persistable<UUID> {
     @Getter
     private LocalDateTime lastModifiedAt;
 
+    protected AbstractEntity(UUID uuid) {
+        this.id = uuid;
+    }
+
     @Override
     @Transient
     public boolean isNew() {
         return id == null;
     }
 
-    public static AvailabilityBuilder builder(Product owner) {
-        return new AvailabilityBuilder(owner);
-    }
-
-    public static class AvailabilityBuilder {
-        private String state = "ON_STOCK";
-        AvailabilityBuilder(Product owner) {
-            owner(owner);
-        }
+    @Override
+    public UUID getId() {
+        return id;
     }
 }
